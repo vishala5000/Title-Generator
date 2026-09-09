@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,16 +47,17 @@ public class MainActivity extends AppCompatActivity {
         root.setPadding(dp(16), dp(16), dp(16), dp(16));
         root.setBackgroundColor(Color.rgb(248, 249, 250));
 
-        // TITLE
+        // APP TITLE
         TextView title = new TextView(this);
         title.setText("Bible Title Generator");
         title.setTextSize(24);
         title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        title.setTextColor(Color.rgb(25, 25, 25));
+        title.setTextColor(Color.BLACK);
         title.setGravity(Gravity.CENTER);
         title.setPadding(0, 0, 0, dp(12));
 
-        root.addView(title,
+        root.addView(
+                title,
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         root.addView(description);
 
-        // INPUT
+        // INPUT BOX
         inputText = new EditText(this);
 
         inputText.setHint(
@@ -86,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
         );
 
         inputText.setTextSize(17);
+
+        // FIX: TYPED TEXT IS BLACK
+        inputText.setTextColor(Color.BLACK);
+
+        // FIX: HINT TEXT IS GRAY
+        inputText.setHintTextColor(Color.GRAY);
+
         inputText.setGravity(Gravity.TOP | Gravity.START);
+
         inputText.setInputType(
                 InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE |
@@ -95,7 +103,15 @@ public class MainActivity extends AppCompatActivity {
 
         inputText.setSingleLine(false);
         inputText.setMinLines(7);
-        inputText.setPadding(dp(14), dp(14), dp(14), dp(14));
+
+        inputText.setPadding(
+                dp(14),
+                dp(14),
+                dp(14),
+                dp(14)
+        );
+
+        // WHITE INPUT BACKGROUND
         inputText.setBackgroundColor(Color.WHITE);
 
         root.addView(
@@ -111,11 +127,13 @@ public class MainActivity extends AppCompatActivity {
         buttonRow.setOrientation(LinearLayout.HORIZONTAL);
         buttonRow.setPadding(0, dp(12), 0, dp(12));
 
+        // GENERATE BUTTON
         Button generateButton = new Button(this);
         generateButton.setText("GENERATE TITLES");
         generateButton.setTextSize(14);
         generateButton.setAllCaps(false);
 
+        // CLEAR BUTTON
         Button clearButton = new Button(this);
         clearButton.setText("CLEAR");
         clearButton.setTextSize(14);
@@ -129,7 +147,11 @@ public class MainActivity extends AppCompatActivity {
                 );
 
         buttonParams.setMargins(0, 0, dp(6), 0);
-        buttonRow.addView(generateButton, buttonParams);
+
+        buttonRow.addView(
+                generateButton,
+                buttonParams
+        );
 
         LinearLayout.LayoutParams clearParams =
                 new LinearLayout.LayoutParams(
@@ -139,7 +161,11 @@ public class MainActivity extends AppCompatActivity {
                 );
 
         clearParams.setMargins(dp(6), 0, 0, 0);
-        buttonRow.addView(clearButton, clearParams);
+
+        buttonRow.addView(
+                clearButton,
+                clearParams
+        );
 
         root.addView(buttonRow);
 
@@ -151,8 +177,11 @@ public class MainActivity extends AppCompatActivity {
         TextView resultTitle = new TextView(this);
         resultTitle.setText("Generated Titles");
         resultTitle.setTextSize(19);
-        resultTitle.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        resultTitle.setTextColor(Color.rgb(30, 30, 30));
+        resultTitle.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+        resultTitle.setTextColor(Color.BLACK);
 
         resultHeader.addView(
                 resultTitle,
@@ -163,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+        // COPY ALL BUTTON
         Button copyAllButton = new Button(this);
         copyAllButton.setText("COPY ALL");
         copyAllButton.setTextSize(13);
@@ -178,12 +208,17 @@ public class MainActivity extends AppCompatActivity {
 
         root.addView(resultHeader);
 
-        // RESULTS SCROLL
+        // RESULTS SCROLL VIEW
         ScrollView resultScroll = new ScrollView(this);
 
         resultsContainer = new LinearLayout(this);
         resultsContainer.setOrientation(LinearLayout.VERTICAL);
-        resultsContainer.setPadding(0, dp(8), 0, dp(20));
+        resultsContainer.setPadding(
+                0,
+                dp(8),
+                0,
+                dp(20)
+        );
 
         resultScroll.addView(resultsContainer);
 
@@ -198,15 +233,25 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(root);
 
-        generateButton.setOnClickListener(v -> generateTitles());
+        // GENERATE
+        generateButton.setOnClickListener(
+                v -> generateTitles()
+        );
 
+        // CLEAR
         clearButton.setOnClickListener(v -> {
+
             inputText.setText("");
+
             resultsContainer.removeAllViews();
+
             generatedTitles.clear();
         });
 
-        copyAllButton.setOnClickListener(v -> copyAllTitles());
+        // COPY ALL
+        copyAllButton.setOnClickListener(
+                v -> copyAllTitles()
+        );
     }
 
     private void generateTitles() {
@@ -214,18 +259,22 @@ public class MainActivity extends AppCompatActivity {
         resultsContainer.removeAllViews();
         generatedTitles.clear();
 
-        String input = inputText.getText().toString().trim();
+        String input =
+                inputText.getText().toString().trim();
 
         if (input.isEmpty()) {
+
             Toast.makeText(
                     this,
                     "Enter at least one Bible chapter.",
                     Toast.LENGTH_SHORT
             ).show();
+
             return;
         }
 
-        String[] lines = input.split("\\r?\\n");
+        String[] lines =
+                input.split("\\r?\\n");
 
         int count = 0;
 
@@ -240,19 +289,28 @@ public class MainActivity extends AppCompatActivity {
             String title = createTitle(line);
 
             if (title != null) {
+
                 generatedTitles.add(title);
-                addResultCard(title, generatedTitles.size());
+
+                addResultCard(
+                        title,
+                        generatedTitles.size()
+                );
+
                 count++;
             }
         }
 
         if (count == 0) {
+
             Toast.makeText(
                     this,
                     "No valid Bible chapter lines found.",
                     Toast.LENGTH_SHORT
             ).show();
+
         } else {
+
             Toast.makeText(
                     this,
                     count + " title(s) generated.",
@@ -265,45 +323,93 @@ public class MainActivity extends AppCompatActivity {
 
         input = input.trim();
 
-        // Remove accidental colon/reference from the input.
-        // Example:
-        // Genesis 1:5 -> Genesis 1
-        int colonPosition = input.indexOf(':');
+        /*
+         * If user enters:
+         *
+         * Genesis 1:5
+         *
+         * it becomes:
+         *
+         * Genesis 1
+         */
+
+        int colonPosition =
+                input.indexOf(':');
 
         if (colonPosition >= 0) {
-            input = input.substring(0, colonPosition).trim();
+
+            input =
+                    input.substring(
+                            0,
+                            colonPosition
+                    ).trim();
         }
 
         if (input.isEmpty()) {
             return null;
         }
 
-        // Find final space separating book name and chapter.
-        int lastSpace = input.lastIndexOf(' ');
+        // Find last space between book and chapter
+        int lastSpace =
+                input.lastIndexOf(' ');
 
-        if (lastSpace <= 0 || lastSpace >= input.length() - 1) {
+        if (lastSpace <= 0 ||
+                lastSpace >= input.length() - 1) {
+
             return null;
         }
 
-        String book = input.substring(0, lastSpace).trim();
-        String chapter = input.substring(lastSpace + 1).trim();
+        String book =
+                input.substring(
+                        0,
+                        lastSpace
+                ).trim();
 
-        if (book.isEmpty() || chapter.isEmpty()) {
+        String chapter =
+                input.substring(
+                        lastSpace + 1
+                ).trim();
+
+        if (book.isEmpty() ||
+                chapter.isEmpty()) {
+
             return null;
         }
 
-        // Keep only the numeric chapter portion.
-        chapter = chapter.replaceAll("[^0-9]", "");
+        // Keep numeric chapter
+        chapter =
+                chapter.replaceAll(
+                        "[^0-9]",
+                        ""
+                );
 
         if (chapter.isEmpty()) {
             return null;
         }
 
-        String reference = book + " " + chapter + ":3";
+        /*
+         * Requested format:
+         *
+         * Genesis 1
+         * becomes
+         * Genesis 1:3
+         */
 
-        String hashtag = book
-                .toLowerCase(Locale.US)
-                .replaceAll("[^a-z0-9]", "");
+        String reference =
+                book + " " + chapter + ":3";
+
+        /*
+         * Genesis -> #genesis
+         * Matthew -> #matthew
+         * Song of Solomon -> #songofsolomon
+         */
+
+        String hashtag =
+                book.toLowerCase(Locale.US)
+                        .replaceAll(
+                                "[^a-z0-9]",
+                                ""
+                        );
 
         if (hashtag.isEmpty()) {
             hashtag = "bible";
@@ -315,12 +421,28 @@ public class MainActivity extends AppCompatActivity {
                 hashtag;
     }
 
-    private void addResultCard(String title, int number) {
+    private void addResultCard(
+            String title,
+            int number
+    ) {
 
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(dp(14), dp(12), dp(14), dp(12));
-        card.setBackgroundColor(Color.WHITE);
+        LinearLayout card =
+                new LinearLayout(this);
+
+        card.setOrientation(
+                LinearLayout.VERTICAL
+        );
+
+        card.setPadding(
+                dp(14),
+                dp(12),
+                dp(14),
+                dp(12)
+        );
+
+        card.setBackgroundColor(
+                Color.WHITE
+        );
 
         LinearLayout.LayoutParams cardParams =
                 new LinearLayout.LayoutParams(
@@ -328,32 +450,67 @@ public class MainActivity extends AppCompatActivity {
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
 
-        cardParams.setMargins(0, dp(6), 0, dp(6));
+        cardParams.setMargins(
+                0,
+                dp(6),
+                0,
+                dp(6)
+        );
 
-        resultsContainer.addView(card, cardParams);
+        resultsContainer.addView(
+                card,
+                cardParams
+        );
 
-        TextView numberText = new TextView(this);
-        numberText.setText("TITLE " + number);
+        // TITLE NUMBER
+        TextView numberText =
+                new TextView(this);
+
+        numberText.setText(
+                "TITLE " + number
+        );
+
         numberText.setTextSize(12);
-        numberText.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        numberText.setTextColor(Color.rgb(90, 90, 90));
+
+        numberText.setTypeface(
+                Typeface.DEFAULT,
+                Typeface.BOLD
+        );
+
+        numberText.setTextColor(
+                Color.rgb(90, 90, 90)
+        );
 
         card.addView(numberText);
 
-        TextView titleText = new TextView(this);
+        // GENERATED TITLE
+        TextView titleText =
+                new TextView(this);
+
         titleText.setText(title);
         titleText.setTextSize(16);
-        titleText.setTextColor(Color.rgb(25, 25, 25));
-        titleText.setPadding(0, dp(8), 0, dp(10));
+        titleText.setTextColor(Color.BLACK);
+
+        titleText.setPadding(
+                0,
+                dp(8),
+                0,
+                dp(10)
+        );
 
         card.addView(titleText);
 
-        Button copyButton = new Button(this);
+        // COPY BUTTON
+        Button copyButton =
+                new Button(this);
+
         copyButton.setText("COPY");
         copyButton.setAllCaps(false);
 
         copyButton.setOnClickListener(v -> {
+
             copyToClipboard(title);
+
             Toast.makeText(
                     this,
                     "Title copied.",
@@ -370,12 +527,15 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void copyToClipboard(String text) {
+    private void copyToClipboard(
+            String text
+    ) {
 
         ClipboardManager clipboard =
-                (ClipboardManager) getSystemService(
-                        Context.CLIPBOARD_SERVICE
-                );
+                (ClipboardManager)
+                        getSystemService(
+                                Context.CLIPBOARD_SERVICE
+                        );
 
         ClipData clip =
                 ClipData.newPlainText(
@@ -389,26 +549,41 @@ public class MainActivity extends AppCompatActivity {
     private void copyAllTitles() {
 
         if (generatedTitles.isEmpty()) {
+
             Toast.makeText(
                     this,
                     "Generate titles first.",
                     Toast.LENGTH_SHORT
             ).show();
+
             return;
         }
 
-        StringBuilder all = new StringBuilder();
+        StringBuilder all =
+                new StringBuilder();
 
-        for (int i = 0; i < generatedTitles.size(); i++) {
+        for (
+                int i = 0;
+                i < generatedTitles.size();
+                i++
+        ) {
 
-            all.append(generatedTitles.get(i));
+            all.append(
+                    generatedTitles.get(i)
+            );
 
-            if (i < generatedTitles.size() - 1) {
+            if (
+                    i <
+                    generatedTitles.size() - 1
+            ) {
+
                 all.append("\n");
             }
         }
 
-        copyToClipboard(all.toString());
+        copyToClipboard(
+                all.toString()
+        );
 
         Toast.makeText(
                 this,
